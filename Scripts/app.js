@@ -4,11 +4,13 @@ app.controller("booklist", function ($scope) {
     console.log("Bookify booklist");
 });
 
-var myApp = angular.module('myApp', ['infinite-scroll']);
+app.controller("itebooks", function ($scope, $http, itebooks) {
+    console.log("Creating new itebooks");
 
-myApp.controller('bookList', function ($scope, itebooks) {
     $scope.itebooks = new itebooks();
+  
 });
+
 
 // Reddit constructor function to encapsulate HTTP and pagination logic
 app.factory('itebooks', function ($http) {

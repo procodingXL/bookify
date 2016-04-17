@@ -9,8 +9,11 @@
     
     <link href="CSS/ui-bootstrap-csp.css" rel="stylesheet" />
     <link href="CSS/style.css" rel="stylesheet" />
+    
     <script src="Scripts/angular.js"></script>
     <script src="Scripts/angular-ui/ui-bootstrap.js"></script>
+    <script src="Scripts/app.js"></script>
+    <script src="login.js"></script>
 
 </head>
 <body ng-app="bookify" ng-controller="login">
@@ -18,12 +21,11 @@
 
     <p>Login or Register with:</p>
 
-    <div class="fb-login-button" data-max-rows="2" data-size="xlarge" data-show-faces="true" data-auto-logout-link="true" onlogin="test()" data-scope="user_about_me,user_friends"></div>
+    <div class="fb-login-button" data-max-rows="2" data-size="xlarge" data-show-faces="true" data-auto-logout-link="true" onlogin="getName()" data-scope="user_about_me,user_friends"></div>
+
+    <h1>name: {{name}}</h1>
 
 
-
-
-    <script src="Scripts/app.js"></script>
-    <script src="login.js"></script>
+    
 </body>
 </html>

@@ -13,15 +13,17 @@
     <script src="Scripts/angular-ui/ui-bootstrap.js"></script>
 
 </head>
-<body>
+<body ng-app="bookify" ng-controller="login">
+    <div id="fb-root"></div>
 
     <p>Login or Register with:</p>
 
-    <a href="https://www.facebook.com/dialog/oauth?client_id=494568984079229&redirect_uri=http://localhost:5610/index.html&scope=user_about_me,email,user_friends" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
+    <div class="fb-login-button" data-max-rows="2" data-size="xlarge" data-show-faces="true" data-auto-logout-link="true" onlogin="test()" data-scope="user_about_me,user_friends"></div>
 
 
 
 
     <script src="Scripts/app.js"></script>
+    <script src="login.js"></script>
 </body>
 </html>

@@ -24,7 +24,7 @@ app.factory('itebooks', function ($http) {
         if (this.busy) return;
         this.busy = true;
 
-        var url = "http://it-ebooks-api.info/v1/search/php/page/"+this.after;
+        var url = "http://it-ebooks-api.info/v1/search/*/page/"+this.after;
         $http({
             method: 'GET',
             url: url

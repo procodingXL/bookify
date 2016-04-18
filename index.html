@@ -2,23 +2,45 @@
 <html>
 <head>
     <title></title>
-	<meta charset="utf-8" />
+    <meta charset="utf-8" />
     <link href="CSS/bootstrap-theme.css" rel="stylesheet" />
     <link href="CSS/bootstrap.css" rel="stylesheet" />
 
     <link href="CSS/ui-bootstrap-csp.css" rel="stylesheet" />
     <link href="CSS/style.css" rel="stylesheet" />
+    <script src="Scripts/jquery-2.2.1.js"></script>
     <script src="Scripts/angular.js"></script>
     <script src="Scripts/angular-ui/ui-bootstrap.js"></script>
+    <script src="Scripts/ng-infinite-scroll.js"></script>
     <script src="Scripts/app.js"></script>
 </head>
-<body ng-app="bookify">
+<body ng-app='bookify'>
 
-    
-    <div ng-controller="itebooks"></div>
+    <div class="row">
+        <div id="BookList" ng-controller="itebooks" class="col-sm-12 col-md-4 col-md-offset-2">
+            <div infinite-scroll='itebooks.nextPage()' infinite-scroll-disable="itebooks.busy" infinite-scroll-distance="1">
+                <div ng-repeat="item in itebooks.items">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="row bookList">
+                                <img src="{{item.Image}}" alt="" />
+                                <div class="col-md-2">{{item.Description}}</div>
+                                <div class="col-md-2">{{item.ID}}</div>
+                                <div clas="col-md-1">{{item.Subtitle}}</div>
+                                <div clas="col-md-1">{{item.Title}}</div>
+                                <button>Voeg toe aan boekenkast</button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div ng-show="itebooks.busy">Loeading data...</div>
+            </div>
+        </div>
+    </div>
 
 
 
-    
+
+
 </body>
 </html>

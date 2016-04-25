@@ -1,12 +1,13 @@
-﻿var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', 'itebooks', function ($scope, $http, itebooks) {
+﻿
+var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', 'itebooks', function ($scope, $http, itebooks) {
     console.log("Creating new itebooks");
 
     $scope.itebooks = new itebooks();
 }]);
 
-app.controller("booklist", function ($scope) {
-    console.log("Bookify booklist");
-});
+//app.controller("booklist", function ($scope) {
+//    console.log("Bookify booklist");
+//});
 
 
 
@@ -17,9 +18,11 @@ app.factory('itebooks', function ($http) {
         this.items = [];
         this.busy = false;
         this.after = 1;
+        console.log("Created object itebooks");
     };
 
     itebooks.prototype.nextPage = function () {
+        console.log("Starting next page");
         if (this.busy) return;
         this.busy = true;
 
@@ -39,7 +42,7 @@ app.factory('itebooks', function ($http) {
             this.busy = false;
         }.bind(this));
     };
-
+    console.log("return itebooks");
     return itebooks;
 });
 

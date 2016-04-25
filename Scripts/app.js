@@ -1,15 +1,14 @@
-﻿var app = angular.module("bookify", ['infinite-scroll']);
+﻿var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', 'itebooks', function ($scope, $http, itebooks) {
+    console.log("Creating new itebooks");
+
+    $scope.itebooks = new itebooks();
+}]);
 
 app.controller("booklist", function ($scope) {
     console.log("Bookify booklist");
 });
 
-app.controller("itebooks", function ($scope, $http, itebooks) {
-    console.log("Creating new itebooks");
 
-    $scope.itebooks = new itebooks();
-  
-});
 
 
 // Reddit constructor function to encapsulate HTTP and pagination logic
@@ -24,7 +23,7 @@ app.factory('itebooks', function ($http) {
         if (this.busy) return;
         this.busy = true;
 
-        var url = "http://it-ebooks-api.info/v1/search/php/page/"+this.after;
+        var url = "http://it-ebooks-api.info/v1/search/php/page/" + this.after;
         $http({
             method: 'GET',
             url: url

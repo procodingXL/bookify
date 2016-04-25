@@ -1,43 +1,35 @@
-﻿var app = angular.module("bookify");
+﻿var app = angular.module("bookify", []);
 
-//app.factory('facebookService', function ($q) {
-//    return {
-//        getMyLastName: function () {
-//            var deferred = $q.defer();
-//            FB.api('/me', {
-//                fields: 'last_name'
-//            }, function (response) {
-//                if (!response || response.error) {
-//                    deferred.reject('Error occured');
-//                } else {
-//                    deferred.resolve(response);
-//                }
-//            });
-//            return deferred.promise;
-//        }
-//    }
-//});
-
-app.controller("login", function ($scope, $http, $window) {
-   
-
-    //getMyLastName = function () {
-    //    facebookService.async.getMyLastName()
-    //      .then(function (response) {
-    //          $scope.last_name = response.last_name;
-    //          console.log($scope.last_name);
-    //      }
-    //    );
-    //};
-
-    getName = function() {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function (response) {
-            console.log('Successful login for: ' + response.name);
-            $scope.name = response.name;
-            console.log(response);
-        });
+app.factory('facebookService', function ($q) {
+    return {
+        getMyLastName: function () {
+            var deferred = $q.defer();
+            FB.api('/me', {
+                fields: 'last_name'
+            }, function (response) {
+                if (!response || response.error) {
+                    deferred.reject('Error occured');
+                } else {
+                    deferred.resolve(response);
+                }
+            });
+            console.log(deferred.promise);
+            return deferred.promise;
+        }
     }
+});
+
+app.controller("login", function ($scope, $http, $window, facebookService) {
+    console.log("in controller");
+
+    getMyLastName = function () {
+        facebookService.getMyLastName()
+          .then(function (response) {
+              $scope.last_name = response.last_name;
+              console.log($scope.last_name);
+          }
+        );
+    };
     
     $window.fbAsyncInit = function () {
         FB.init({
@@ -46,6 +38,9 @@ app.controller("login", function ($scope, $http, $window) {
             cookie: true,
             xfbml: true,
             version: 'v2.5'
+        });
+        FB.Event.subscribe('auth.login', function () {
+            window.location = "http://localhost:5610/index.html";
         });
     };
     

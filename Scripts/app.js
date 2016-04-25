@@ -4,9 +4,9 @@
     $scope.itebooks = new itebooks();
 }]);
 
-app.controller("booklist", function ($scope) {
-    console.log("Bookify booklist");
-});
+//app.controller("booklist", function ($scope) {
+//    console.log("Bookify booklist");
+//});
 
 
 

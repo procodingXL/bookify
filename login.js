@@ -1,4 +1,4 @@
-﻿var app = angular.module("bookify", []);
+﻿var app = angular.module("bookify", ['infinite-scroll']);
 
 app.controller("facebook", function ($scope, $window) {
     $window.fbAsyncInit = function () {

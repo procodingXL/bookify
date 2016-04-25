@@ -9,19 +9,23 @@
     
     <link href="CSS/ui-bootstrap-csp.css" rel="stylesheet" />
     <link href="CSS/style.css" rel="stylesheet" />
+    
     <script src="Scripts/angular.js"></script>
     <script src="Scripts/angular-ui/ui-bootstrap.js"></script>
+    <script src="Scripts/app.js"></script>
+    <script src="login.js"></script>
 
 </head>
-<body>
+<body ng-app="bookify" ng-controller="login">
+    <div id="fb-root"></div>
 
     <p>Login or Register with:</p>
 
-    <a href="https://www.facebook.com/dialog/oauth?client_id=494568984079229&redirect_uri=http://localhost:5610/index.html&scopes=user_about_me,email,user_friends" class="btn btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
+    <div class="fb-login-button" data-max-rows="2" data-size="xlarge" data-show-faces="true" data-auto-logout-link="true" onlogin="getMyLastName()" data-scope="user_about_me,user_friends"></div>
+
+    <h1>name: {{last_name}}</h1>
 
 
-
-
-    <script src="Scripts/app.js"></script>
+    
 </body>
 </html>

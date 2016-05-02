@@ -18,9 +18,8 @@
 </head>
 <body ng-app='bookify' ng-controller="facebook">
     <div id="fb-root"></div>
-    <div class="fb-login-button" data-max-rows="2" data-size="xlarge" data-show-faces="true" data-auto-logout-link="true" onlogin="getMyLastName()" data-scope="user_about_me,user_friends"></div>
-    <div ng-controller="firebaseCtrl"></div>
-    <div class="row" ng-show=true>
+    <div class="fb-login-button" data-size="xlarge" data-auto-logout-link="true" onlogin="getData()" data-scope="user_about_me,user_friends"></div>
+    <div class="row">
         <div id="BookList" ng-controller="itebooks" class="col-sm-12 col-md-4 col-md-offset-2">
             <div infinite-scroll='itebooks.nextPage()' infinite-scroll-disable="itebooks.busy" infinite-scroll-distance="1">
                 <div ng-repeat="item in itebooks.items">

@@ -73,6 +73,7 @@ app.factory('facebookService', function ($q) {
     }
 });
 
+
 //app.controller("login", function ($scope, $http, $window, facebookService) {
 //    console.log("in controller");
 

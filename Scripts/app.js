@@ -46,12 +46,11 @@ app.factory('itebooks', function ($http) {
     return itebooks;
 });
 
-var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', function ($scope, $http) {
+var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', 'facebookService', function ($scope, $http, facebookService) {
     var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
-    var name = "testUser1";
-    var facebookid = "1237187";
-    var premium = true;
-    var bookArray = [];
+    var name, facebookid, premium;
+    premium = true;
+    
     var userJson = {
         facebookid: facebookid,
         name: name,
@@ -60,13 +59,24 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
 
         }
     }
-
     for (var i = 0; i < 20; i++) {
         var newBook = "book" + i;
         var newValue = "value" + i;
         userJson.books[newBook] = newValue;
     }
-    //var bookListJson = JSON.stringify(bookArray);
-    firebaseDB.push(userJson);
+    var getFbData = function () {
+        facebookService.getData()
+          .then(function (response) {
+              facebookid = response.id;
+              name = response.first_name + response.last_name;
+              console.log(response.first_name);
+             
+          }
+        );
+        
+    }
+    getFbData();
+    //firebaseDB.push(userJson);
+    
 }]);
 

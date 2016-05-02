@@ -46,3 +46,27 @@ app.factory('itebooks', function ($http) {
     return itebooks;
 });
 
+var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', function ($scope, $http) {
+    var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
+    var name = "testUser1";
+    var facebookid = "1237187";
+    var premium = true;
+    var bookArray = [];
+    var userJson = {
+        facebookid: facebookid,
+        name: name,
+        premium: premium,
+        books: {
+
+        }
+    }
+
+    for (var i = 0; i < 20; i++) {
+        var newBook = "book" + i;
+        var newValue = "value" + i;
+        userJson.books[newBook] = newValue;
+    }
+    //var bookListJson = JSON.stringify(bookArray);
+    firebaseDB.push(userJson);
+}]);
+

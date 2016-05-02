@@ -30,7 +30,7 @@ app.controller("facebook", function ($scope, $window, facebookService) {
         });
     };
 
-    getMyLastName = function () {
+    getData = function () {
         facebookService.getData()
           .then(function (response) {
               $scope.last_name = response.last_name;

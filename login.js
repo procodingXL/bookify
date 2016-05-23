@@ -1,4 +1,5 @@
-﻿var app = angular.module("bookify", ['infinite-scroll']);
+﻿
+var app = angular.module("bookify", ['infinite-scroll']);
 
 app.controller("facebook", function ($scope, $window, facebookService) {
 
@@ -52,6 +53,61 @@ app.controller("facebook", function ($scope, $window, facebookService) {
         js.src = "//connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v2.6&appId=494568984079229";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+
+    /*
+    //Stripe
+    $scope.generateToken = function () {
+        var form = $('#payment-form');
+
+        // No pressing the buy now button more than once
+        form.find('button').prop('disabled', true);
+
+        // Create the token, based on the form object
+        Stripe.createToken(form, stripeResponseHandler);
+    };
+
+    var stripeResponseHandler = function (status, response) {
+        console.log("in responseHandler");
+        var form = $('#payment-form');
+
+        // Any validation errors?
+        if (response.error) {
+            // Show the user what they did wrong
+            form.find('.payment-errors').text(response.error.message);
+
+            // Make the submit clickable again
+            form.find('button').prop('disabled', false);
+        } else {
+            // Otherwise, we're good to go! Submit the form.
+
+            // Insert the unique token into the form
+            $('<input>', {
+                'type': 'hidden',
+                'name': 'stripeToken',
+                'value': response.id
+            }).appendTo(form);
+
+            console.log(response.id);
+            Stripe.setApiKey('sk_test_zJb3f0ZbLv5NULXBhqXhpzpH');
+            //Stripe.setSecretKey('sk_test_zJb3f0ZbLv5NULXBhqXhpzpH');
+
+            var charge = stripe.charges.create({
+                amount: 1000, // amount in cents, again
+                currency: "eur",
+                source: response.id,
+                description: "Example charge"
+            }, function (err, charge) {
+                if (err && err.type === 'StripeCardError') {
+                    // The card has been declined
+                }
+            });
+
+            // Call the native submit method on the form
+            // to keep the submission from being canceled
+            form.get(0).submit();
+          
+        }
+    };*/
 })
 
 app.factory('facebookService', function ($q) {

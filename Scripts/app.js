@@ -11,7 +11,40 @@ var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', '
 
 
 
-
+app.factory('userService', function ($http) {
+    var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
+    var User = {};
+   
+ 
+    
+    var userData = {
+        //facebookid: facebookid,
+        name: "bob lolz",
+        firstname : "bob",
+        lastname : "lolz",
+        premium: true,
+        books: {
+            "book1": "goed boek",
+            "boek2" : "geen goed boek"
+        }
+    }
+    User.data = userData;
+    User.updateName = function (firstName, lastName) {
+        userData.name = firstName + lastName;
+        userData.firstname = firstName || "nog";
+        userData.lastname = lastName || "niks";
+        firebaseDB.push(User.data);
+    }
+    User.updateFBID = function (fbId) {
+        userData.fbid = fbId;
+    }
+    User.log = function () {
+        console.log("userData.log called");
+        console.log(userData);
+    }
+    
+    return User;
+})
 // Reddit constructor function to encapsulate HTTP and pagination logic
 app.factory('itebooks', function ($http) {
     var itebooks = function () {
@@ -46,36 +79,40 @@ app.factory('itebooks', function ($http) {
     return itebooks;
 });
 
-var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', 'facebookService', function ($scope, $http, facebookService) {
+var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', 'facebookService', '$firebaseObject','userService', function ($scope, $http, facebookService, $firebaseObject, userService) {
     var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
     var name, facebookid, premium;
-    premium = true;
+    name = "john";
     
-    var userJson = {
-        facebookid: facebookid,
-        name: name,
-        premium: premium,
-        books: {
-
-        }
-    }
-    for (var i = 0; i < 20; i++) {
-        var newBook = "book" + i;
-        var newValue = "value" + i;
-        userJson.books[newBook] = newValue;
-    }
-    var getFbData = function () {
-        facebookService.getData()
-          .then(function (response) {
-              facebookid = response.id;
-              name = response.first_name + response.last_name;
-              console.log(response.first_name);
+    premium = true;
+    $scope.data = $firebaseObject(firebaseDB);
+    console.log("userService");
+    console.log(userService);
+    userService.log();
+    
+    //for (var i = 0; i < 20; i++) {
+    //    var newBook = "book" + i;
+    //    var newValue = "value" + i;
+    //    userJson.books[newBook] = newValue;
+    //}
+    //console.log(userJson);
+    //console.log("Logged UserJSON object");
+    //userJson.Testing = "added new data";
+    ////console.log(userJson);
+    //console.log("Logged UserJSON object after adding data");
+    //firebaseDB.push(userService.data);
+    //var getFbData = function () {
+    //    facebookService.getData()
+    //      .then(function (response) {
+    //          facebookid = response.id;
+    //          name = response.first_name + response.last_name;
+    //          console.log(response.first_name);
              
-          }
-        );
+    //      }
+    //    );
         
-    }
-    getFbData();
+    //}
+    //getFbData();
     //firebaseDB.push(userJson);
     
 }]);

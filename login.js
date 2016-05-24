@@ -1,6 +1,6 @@
-﻿var app = angular.module("bookify", ['infinite-scroll']);
+﻿var app = angular.module("bookify", ['infinite-scroll','firebase']);
 
-app.controller("facebook", function ($scope, $window, facebookService) {
+app.controller("facebook", function ($scope, $window, facebookService, userService) {
 
     $window.fbAsyncInit = function () {
         FB.init({
@@ -19,6 +19,7 @@ app.controller("facebook", function ($scope, $window, facebookService) {
                 // and signed request each expire
                 console.log("ingelogd");
                 getData();
+                
                 var uid = response.authResponse.userID;
                 var accessToken = response.authResponse.accessToken;
             } else if (response.status === 'not_authorized') {
@@ -34,9 +35,12 @@ app.controller("facebook", function ($scope, $window, facebookService) {
         facebookService.getData()
           .then(function (response) {
               $scope.last_name = response.last_name;
+              userService.updateFBID(response.id);
+              
               console.log($scope.last_name);
               console.log(response.first_name);
               console.log(response.id);
+              userService.updateName(response.first_name, response.last_name);
           }
         );
     };

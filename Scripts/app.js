@@ -1,4 +1,17 @@
 ﻿
+var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
+var isNewUser = true;
+firebaseDB.onAuth(function (authData) {
+    if (authData && isNewUser) {
+        // save the user's profile into the database so we can list users,
+        // use them in Security and Firebase Rules, and show profiles
+        firebaseDB.child("users").child(authData.uid).set({
+            provider: authData.provider,
+            name: authData.facebook.displayName
+        });
+    }
+});
+
 var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', 'itebooks', function ($scope, $http, itebooks) {
     console.log("Creating new itebooks");
 
@@ -8,11 +21,16 @@ var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', '
 //app.controller("booklist", function ($scope) {
 //    console.log("Bookify booklist");
 //});
-
-
+function authDataCallback(authData) {
+    if (authData) {
+        console.log("User " + authData.uid + " is logged in with " + authData.provider);
+    } else {
+        console.log("User is logged out");
+    }
+}
 
 app.factory('userService', function ($http) {
-    var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
+   
     var User = {};
    
  
@@ -33,6 +51,13 @@ app.factory('userService', function ($http) {
         userData.name = firstName + lastName;
         userData.firstname = firstName || "nog";
         userData.lastname = lastName || "niks";
+        //ref.once("value", function (snapshot) {
+        //    if (snapshot.child("fbid").exists()) {
+        //        console.log("fbid does exist");
+        //    } else {
+        //        console.log("fbid does not exist");
+        //    }
+        //});
         firebaseDB.push(User.data);
     }
     User.updateFBID = function (fbId) {
@@ -80,7 +105,14 @@ app.factory('itebooks', function ($http) {
 });
 
 var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', 'facebookService', '$firebaseObject','userService', function ($scope, $http, facebookService, $firebaseObject, userService) {
-    var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
+    //var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
+    firebaseDB.authWithOAuthPopup("facebook", function (error, authData) {
+        if (error) {
+            console.log("login failed", error);
+        } else {
+            console.log("succes", authData);
+        }
+    })
     var name, facebookid, premium;
     name = "john";
     

@@ -1,20 +1,12 @@
 ﻿
 var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
-var isNewUser = true;
-firebaseDB.onAuth(function (authData) {
-    if (authData && isNewUser) {
-        // save the user's profile into the database so we can list users,
-        // use them in Security and Firebase Rules, and show profiles
-        firebaseDB.child("users").child(authData.uid).set({
-            provider: authData.provider,
-            name: authData.facebook.displayName
-        });
-    }
-});
+var UserExists = true;
 
-var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', 'itebooks', function ($scope, $http, itebooks) {
+
+var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', 'itebooks', 'userService', function ($scope, $http, itebooks, userService) {
     console.log("Creating new itebooks");
-
+    $scope.addBook = userService.addBook;
+    
     $scope.itebooks = new itebooks();
 }]);
 
@@ -33,7 +25,7 @@ app.factory('userService', function ($http) {
    
     var User = {};
    
- 
+    User.authData;
     
     var userData = {
         //facebookid: facebookid,
@@ -42,8 +34,10 @@ app.factory('userService', function ($http) {
         lastname : "lolz",
         premium: true,
         books: {
-            "book1": "goed boek",
-            "boek2" : "geen goed boek"
+            "lolz":{
+                name: "name"
+            }
+            
         }
     }
     User.data = userData;
@@ -63,10 +57,23 @@ app.factory('userService', function ($http) {
     User.updateFBID = function (fbId) {
         userData.fbid = fbId;
     }
-    User.log = function () {
-        console.log("userData.log called");
-        console.log(userData);
+
+    User.addBook = function (book) {
+        console.log(book);
+        console.log(User.authData);
+        if (User.authData) {
+            //authData = User.AuthData;
+            //authData has data
+            bookID = book.ID;
+            console.log(bookID);
+            
+            firebaseDB.child("users").child(User.authData.uid).child("books").child(book.ID).set({
+                ID: book.ID,
+                Title: book.Title
+            })
+        }
     }
+    
     
     return User;
 })
@@ -106,6 +113,33 @@ app.factory('itebooks', function ($http) {
 
 var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', 'facebookService', '$firebaseObject','userService', function ($scope, $http, facebookService, $firebaseObject, userService) {
     //var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
+    //check if user exists
+    firebaseDB.onAuth(function (authData) {
+        firebaseDB.child('users').child(authData.uid).once("value", function (snapshot) {
+            UserExists = (snapshot.val() !== null);
+            console.log(UserExists);
+        })
+        if (authData && !UserExists) {
+            console.log("new user");
+            //new user so create his node on the server
+            firebaseDB.child("users").child(authData.uid).set({
+                provider: authData.provider,
+                name: authData.facebook.displayName
+                
+            });
+            userService.authData = authData;
+        }
+        else if (authData && UserExists) {
+            //user already exists only update database
+            console.log("existing user");
+            firebaseDB.child("users").child(authData.uid).update({
+                provider: authData.provider,
+                name: authData.facebook.displayName
+
+            });
+            userService.authData = authData;
+        }
+    });
     firebaseDB.authWithOAuthPopup("facebook", function (error, authData) {
         if (error) {
             console.log("login failed", error);
@@ -113,15 +147,14 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
             console.log("succes", authData);
         }
     })
+    
+   
     var name, facebookid, premium;
     name = "john";
     
     premium = true;
     $scope.data = $firebaseObject(firebaseDB);
-    console.log("userService");
-    console.log(userService);
-    userService.log();
-    
+
     //for (var i = 0; i < 20; i++) {
     //    var newBook = "book" + i;
     //    var newValue = "value" + i;

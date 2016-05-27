@@ -59,13 +59,10 @@ app.factory('userService', function ($http) {
     }
 
     User.addBook = function (book) {
-        console.log(book);
-        console.log(User.authData);
         if (User.authData) {
             //authData = User.AuthData;
             //authData has data
             bookID = book.ID;
-            console.log(bookID);
             
             firebaseDB.child("users").child(User.authData.uid).child("books").child(book.ID).set({
                 ID: book.ID,
@@ -83,11 +80,9 @@ app.factory('itebooks', function ($http) {
         this.items = [];
         this.busy = false;
         this.after = 1;
-        console.log("Created object itebooks");
     };
 
     itebooks.prototype.nextPage = function () {
-        console.log("Starting next page");
         if (this.busy) return;
         this.busy = true;
 
@@ -96,18 +91,14 @@ app.factory('itebooks', function ($http) {
             method: 'GET',
             url: url
         }).success(function (data) {
-            console.log(data.Books);
             var items = data.Books;
             for (var i = 0; i < items.length; i++) {
                 this.items.push(items[i]);
             }
             this.after++;
-            console.log(this.after);
-            console.log(url);
             this.busy = false;
         }.bind(this));
     };
-    console.log("return itebooks");
     return itebooks;
 });
 
@@ -117,10 +108,8 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
     firebaseDB.onAuth(function (authData) {
         firebaseDB.child('users').child(authData.uid).once("value", function (snapshot) {
             UserExists = (snapshot.val() !== null);
-            console.log(UserExists);
         })
         if (authData && !UserExists) {
-            console.log("new user");
             //new user so create his node on the server
             firebaseDB.child("users").child(authData.uid).set({
                 provider: authData.provider,
@@ -131,7 +120,6 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
         }
         else if (authData && UserExists) {
             //user already exists only update database
-            console.log("existing user");
             firebaseDB.child("users").child(authData.uid).update({
                 provider: authData.provider,
                 name: authData.facebook.displayName

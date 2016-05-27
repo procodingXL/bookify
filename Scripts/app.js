@@ -1,12 +1,12 @@
 ﻿
 var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
 var UserExists = true;
-
+var premium = false;
 
 var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', 'itebooks', 'userService', function ($scope, $http, itebooks, userService) {
     console.log("Creating new itebooks");
     $scope.addBook = userService.addBook;
-    
+    $scope.premium = userService.premium;
     $scope.itebooks = new itebooks();
 }]);
 
@@ -57,8 +57,9 @@ app.factory('userService', function ($http) {
     User.updateFBID = function (fbId) {
         userData.fbid = fbId;
     }
-
+   
     User.addBook = function (book) {
+        
         if (User.authData) {
             //authData = User.AuthData;
             //authData has data
@@ -69,6 +70,14 @@ app.factory('userService', function ($http) {
                 Title: book.Title
             })
         }
+    }
+    User.premium = function () {
+
+        firebaseDB.child("users").child(User.authData.uid).update({
+            premium: premium
+            
+        })
+        premium = !premium;
     }
     
     

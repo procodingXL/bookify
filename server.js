@@ -15,8 +15,6 @@ var ref = db.ref("users");
 
 
 
-
-
 var app = express();
 
 app.use(bodyparser.json());
@@ -54,38 +52,32 @@ app.get("/api/top:number", function (req, res) {
     array = [];
     ref.once("value", function (snapshot) {
         //get all books to determine the top x books
-        snapshot.forEach(function (childSnapshot) {
-            var childData = childSnapshot.val();
-            var allbooks = childSnapshot.child("books");
-            //console.log(childSnapshot.child("books").numChildren());
+        snapshot.forEach(function (SnapshotUsers) {
+            var childData = SnapshotUsers.val();
+            var allbooks = SnapshotUsers.child("books");
             var counter = 0;
-            allbooks.forEach(function (test) {
+            allbooks.forEach(function (SnapshotBooks) {
 
                 if (array[counter] !== undefined) {
                     console.log("already in there");
                     console.log(array[counter].id);
-                    console.log(test.child("ID").val());
+                    console.log(SnapshotBooks.child("ID").val());
                     for (var i = 0; i < array.length; i++) {
-                        if (array[i].id == test.child("ID").val()) {
+                        if (array[i].id == SnapshotBooks.child("ID").val()) {
                             console.log("real duplicate");
                             array[i].times++;
-                            array[i].title = test.child("Title").val();
+                            array[i].title = SnapshotBooks.child("Title").val();
                         }
                     }
-                    //if (array[counter].id == test.child("ID").val()) {
-                    //    console.log("real duplicate");
-                    //    array[counter].times++;
-                    //    array[counter].title = test.child("Title").val();
-                    //}
+
                 }
                 else {
                     console.log("new book ");
                     //item not in array need to be added
-                    //test.child("ID").val()
                     array.push({
-                        id: test.child("ID").val(),
+                        id: SnapshotBooks.child("ID").val(),
                         times: 1,
-                        title: test.child("Title").val()
+                        title: SnapshotBooks.child("Title").val()
                     });
                 }
                 counter++;
@@ -103,43 +95,35 @@ app.get("/api/top:number", function (req, res) {
 });
 
 app.get("/api/premium", function (req, res) {
-    array = [];
 
     ref.once("value", function (snapshot) {
         //get all books to determine the top x books
+        var total = 0, premium = 0, nonpremium = 0;
+
         snapshot.forEach(function (childSnapshot) {
             var childData = childSnapshot.val();
-            var allbooks = childSnapshot.child("books");
-            //console.log(childSnapshot.child("books").numChildren());
-            var counter = 0;
-            allbooks.forEach(function (test) {
-                if (array[counter] !== undefined) {
-                    if (array[counter].id == test.child("ID").val()) {
-                        //console.log("real duplicate");
-                        array[counter].times++;
-                    }
-                }
-                else {
-                    //item not in array need to be added
-                    test.child("ID").val()
-                    array.push({
-                        id: test.child("ID").val(),
-                        times: 1
-
-                    });
-                }
-                counter++;
-            })
-
+            var allpremium = childSnapshot.child("premium");
+            if (allpremium.val())
+                premium++;
+            else
+                nonpremium++;
+            total++;
         })
-
-        array.sort(function (a, b) {
-            return parseFloat(b.times) - parseFloat(a.times);
-        });
-        res.send(array.slice(0, req.params.number));
-        console.log(array.slice(0, req.params.number));
+        var percent = (((nonpremium - premium) / nonpremium) * 100);
+        var premiumPercentage = ((premium / total) * 100).toFixed(0);
+        var nonpremiumPercentage = ((nonpremium / total) * 100).toFixed(0);
+        var output = {
+            premiumUsers: premium,
+            nonPremiumUsers: nonpremium,
+            premiumUsersPercentage: premiumPercentage,
+            nonPremiumUsersPercentage: nonpremiumPercentage,
+            totalUsers: total
+        }
+        console.log(output);
+        res.json(output);
 
     })
+
 })
 
 

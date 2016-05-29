@@ -10,9 +10,7 @@ var app = angular.module('bookify').controller('itebooks', ['$scope', '$http', '
     $scope.itebooks = new itebooks();
 }]);
 
-//app.controller("booklist", function ($scope) {
-//    console.log("Bookify booklist");
-//});
+
 function authDataCallback(authData) {
     if (authData) {
         console.log("User " + authData.uid + " is logged in with " + authData.provider);
@@ -45,13 +43,7 @@ app.factory('userService', function ($http) {
         userData.name = firstName + lastName;
         userData.firstname = firstName || "nog";
         userData.lastname = lastName || "niks";
-        //ref.once("value", function (snapshot) {
-        //    if (snapshot.child("fbid").exists()) {
-        //        console.log("fbid does exist");
-        //    } else {
-        //        console.log("fbid does not exist");
-        //    }
-        //});
+        
         firebaseDB.push(User.data);
     }
     User.updateFBID = function (fbId) {
@@ -83,7 +75,6 @@ app.factory('userService', function ($http) {
 
     return User;
 })
-// Reddit constructor function to encapsulate HTTP and pagination logic
 app.factory('itebooks', function ($http) {
     var itebooks = function () {
         this.items = [];
@@ -126,8 +117,9 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
             //new user so create his node on the server
             firebaseDB.child("users").child(authData.uid).set({
                 provider: authData.provider,
-                name: authData.facebook.displayName
-
+                name: authData.facebook.displayName,
+                premium: false
+                
             });
             userService.authData = authData;
         }
@@ -135,8 +127,8 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
             //user already exists only update database
             firebaseDB.child("users").child(authData.uid).update({
                 provider: authData.provider,
-                name: authData.facebook.displayName
-
+                name: authData.facebook.displayName,
+                premium:false
             });
             userService.authData = authData;
         }
@@ -156,30 +148,7 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
     premium = true;
     $scope.data = $firebaseObject(firebaseDB);
 
-    //for (var i = 0; i < 20; i++) {
-    //    var newBook = "book" + i;
-    //    var newValue = "value" + i;
-    //    userJson.books[newBook] = newValue;
-    //}
-    //console.log(userJson);
-    //console.log("Logged UserJSON object");
-    //userJson.Testing = "added new data";
-    ////console.log(userJson);
-    //console.log("Logged UserJSON object after adding data");
-    //firebaseDB.push(userService.data);
-    //var getFbData = function () {
-    //    facebookService.getData()
-    //      .then(function (response) {
-    //          facebookid = response.id;
-    //          name = response.first_name + response.last_name;
-    //          console.log(response.first_name);
-
-    //      }
-    //    );
-
-    //}
-    //getFbData();
-    //firebaseDB.push(userJson);
+  
 
 }]);
 

@@ -20,9 +20,17 @@ Dit project maakt gebruik van verschillende componenten waar op gelet moet worde
   
   
 	 - Firebase `npm install --save firebase`
+	 - express `npm install --save express`
+	 - body-parser `npm install body-parser`
+	 - stripe `npm install stripe`
 	 
 	 
  -  In de repo is ook een `.sln` file te vinden als deze gestart wordt doormiddel van `Visual studio` zou de server op de goeie poort moeten draaien. Mocht dit niet het geval zijn zorg er dan voor dat je op `localhost:5610` draait. Anders werkt de authorisatie met Facebook niet!
+
+ -  Voor het testen van de stripe API, kan er gebruik gemaakt worden van de volgende testgegevens:
+	- Card number: 4242424242424242
+	- Date: 04/2017 (of een datum naar keuze)
+	- CVS: 123
 
 	 
 

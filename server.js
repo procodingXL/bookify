@@ -93,6 +93,35 @@ app.get("/api/top:number", function (req, res) {
 
     })
 });
+app.delete("/api/remove/:id", function (req, res) {
+    
+    if (req.params.id.indexOf("facebook:") >-1) {
+        console.log("it is correct");
+        var userref = ref.child(req.params.id);
+        var userName;
+        userref.once("value", function (snapshot) {
+            console.log("once");
+            console.log(snapshot.val());
+            userName = snapshot.child("name").val();
+            if (userName != null) {
+                console.log("we have removed user " + userName);
+                res.send("we have removed user " + userName);
+                userref.remove();
+            } else {
+                res.send("Sorry we cannot delete the user");
+            }
+            
+        })
+    }else{
+        console.log("it is not correct");
+        res.send("Sorry we cannot delete the user");
+    }
+   
+
+//userName = userref.child("name").val();
+
+    
+});
 
 app.get("/api/premium", function (req, res) {
 

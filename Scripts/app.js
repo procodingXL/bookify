@@ -126,8 +126,9 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
             //new user so create his node on the server
             firebaseDB.child("users").child(authData.uid).set({
                 provider: authData.provider,
-                name: authData.facebook.displayName
-
+                name: authData.facebook.displayName,
+                premium: false
+                
             });
             userService.authData = authData;
         }
@@ -135,8 +136,8 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
             //user already exists only update database
             firebaseDB.child("users").child(authData.uid).update({
                 provider: authData.provider,
-                name: authData.facebook.displayName
-
+                name: authData.facebook.displayName,
+                premium:false
             });
             userService.authData = authData;
         }

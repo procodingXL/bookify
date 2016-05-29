@@ -22,22 +22,22 @@ function authDataCallback(authData) {
 }
 
 app.factory('userService', function ($http) {
-   
+
     var User = {};
-   
+
     User.authData;
-    
+
     var userData = {
         //facebookid: facebookid,
         name: "bob lolz",
-        firstname : "bob",
-        lastname : "lolz",
+        firstname: "bob",
+        lastname: "lolz",
         premium: true,
         books: {
-            "lolz":{
+            "lolz": {
                 name: "name"
             }
-            
+
         }
     }
     User.data = userData;
@@ -57,14 +57,14 @@ app.factory('userService', function ($http) {
     User.updateFBID = function (fbId) {
         userData.fbid = fbId;
     }
-   
+
     User.addBook = function (book) {
-        
+        console.log("add book");
         if (User.authData) {
             //authData = User.AuthData;
             //authData has data
             bookID = book.ID;
-            
+
             firebaseDB.child("users").child(User.authData.uid).child("books").child(book.ID).set({
                 ID: book.ID,
                 Title: book.Title
@@ -75,12 +75,12 @@ app.factory('userService', function ($http) {
 
         firebaseDB.child("users").child(User.authData.uid).update({
             premium: premium
-            
+
         })
         premium = !premium;
     }
-    
-    
+
+
     return User;
 })
 // Reddit constructor function to encapsulate HTTP and pagination logic
@@ -111,19 +111,23 @@ app.factory('itebooks', function ($http) {
     return itebooks;
 });
 
-var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', 'facebookService', '$firebaseObject','userService', function ($scope, $http, facebookService, $firebaseObject, userService) {
+var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '$http', 'facebookService', '$firebaseObject', 'userService', function ($scope, $http, facebookService, $firebaseObject, userService) {
     //var firebaseDB = new Firebase('https://sizzling-inferno-2458.firebaseio.com/');
     //check if user exists
     firebaseDB.onAuth(function (authData) {
-        firebaseDB.child('users').child(authData.uid).once("value", function (snapshot) {
-            UserExists = (snapshot.val() !== null);
-        })
+        console.log("authData");
+        console.log(authData);
+        if (authData) {
+            firebaseDB.child('users').child(authData.uid).once("value", function (snapshot) {
+                UserExists = (snapshot.val() !== null);
+            })
+        }
         if (authData && !UserExists) {
             //new user so create his node on the server
             firebaseDB.child("users").child(authData.uid).set({
                 provider: authData.provider,
                 name: authData.facebook.displayName
-                
+
             });
             userService.authData = authData;
         }
@@ -144,11 +148,11 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
             console.log("succes", authData);
         }
     })
-    
-   
+
+
     var name, facebookid, premium;
     name = "john";
-    
+
     premium = true;
     $scope.data = $firebaseObject(firebaseDB);
 
@@ -169,13 +173,13 @@ var firebase = angular.module('bookify').controller('firebaseCtrl', ['$scope', '
     //          facebookid = response.id;
     //          name = response.first_name + response.last_name;
     //          console.log(response.first_name);
-             
+
     //      }
     //    );
-        
+
     //}
     //getFbData();
     //firebaseDB.push(userJson);
-    
+
 }]);
 

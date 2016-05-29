@@ -1,4 +1,4 @@
-﻿var app = angular.module("bookify", ['infinite-scroll','firebase']);
+﻿var app = angular.module("bookify", ['infinite-scroll', 'firebase']);
 ﻿
 
 app.controller("facebook", function ($scope, $window, facebookService) {
@@ -82,7 +82,7 @@ app.factory('facebookService', function ($q) {
 
 
 
-app.controller('paymentController', function ($scope, $http) {
+app.controller('paymentController', function ($scope, $http, userService) {
 
     //$scope.hideForm = false;
 
@@ -142,6 +142,15 @@ app.controller('paymentController', function ($scope, $http) {
                     //    form.find('button').prop('disabled', false);
                         
                     //} 
+                    
+                    if (response.data == "Transaction completed")
+                    {
+                        firebaseDB.child("users").child(userService.authData.uid).update({
+                            premium: true
+
+                        })
+                    }
+                
                     $scope.msgCompleted = response.data;
                     $scope.hideForm = true;
                 });

@@ -32,6 +32,8 @@ Dit project maakt gebruik van verschillende componenten waar op gelet moet worde
 	- Date: 04/2017 (of een datum naar keuze)
 	- CVS: 123
 
+ -  Vanwege een voor ons onbekend probleem, is het noodzakelijk om de `batarang` extensie in `Google Chrome` geïnstalleerd te hebben (https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk). Eenmaal deze extensie geïnstalleerd is, zal de browser opnieuw opgestart moeten worden. Indien je nu naar de webapplicatie gaat, zal je de `tools voor ontwikkelaars` moeten openen en naar het tablad `AngularJS` gaan, waarna je de checkbox `enable`zal moeten aanvinken.
+
 	 
 
 

@@ -1,6 +1,7 @@
 ﻿var app = angular.module("bookify", ['infinite-scroll','firebase']);
+﻿
 
-app.controller("facebook", function ($scope, $window, facebookService, userService) {
+app.controller("facebook", function ($scope, $window, facebookService) {
 
     $window.fbAsyncInit = function () {
         FB.init({
@@ -19,7 +20,6 @@ app.controller("facebook", function ($scope, $window, facebookService, userServi
                 // and signed request each expire
                 console.log("ingelogd");
                 getData();
-                
                 var uid = response.authResponse.userID;
                 var accessToken = response.authResponse.accessToken;
             } else if (response.status === 'not_authorized') {
@@ -31,16 +31,17 @@ app.controller("facebook", function ($scope, $window, facebookService, userServi
         });
     };
 
+    
+
     getData = function () {
+        $scope.userName = "";
         facebookService.getData()
           .then(function (response) {
               $scope.last_name = response.last_name;
-              userService.updateFBID(response.id);
-              
               console.log($scope.last_name);
               console.log(response.first_name);
               console.log(response.id);
-              userService.updateName(response.first_name, response.last_name);
+              $scope.userName = response.first_name;
           }
         );
     };
@@ -56,6 +57,8 @@ app.controller("facebook", function ($scope, $window, facebookService, userServi
         js.src = "//connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v2.6&appId=494568984079229";
         fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+
+   
 })
 
 app.factory('facebookService', function ($q) {
@@ -78,40 +81,72 @@ app.factory('facebookService', function ($q) {
 });
 
 
-//app.controller("login", function ($scope, $http, $window, facebookService) {
-//    console.log("in controller");
 
-//    getMyLastName = function () {
-//        facebookService.getMyLastName()
-//          .then(function (response) {
-//              $scope.last_name = response.last_name;
-//              console.log($scope.last_name);
-//          }
-//        );
-//    };
-    
-//    $window.fbAsyncInit = function () {
-//        FB.init({
-//            appId: '494568984079229',
-//            status: true,
-//            cookie: true,
-//            xfbml: true,
-//            version: 'v2.5'
-//        });
-//        FB.Event.subscribe('auth.login', function () {
-//            window.location = "http://localhost:5610/index.html";
-//        });
-//    };
-    
-//    //javascript
-//    (function(d, s, id) {
-//        var js, fjs = d.getElementsByTagName(s)[0];
-//        if (d.getElementById(id)) return;
-//        js = d.createElement(s);
-//        js.id = id;
-//        js.src = "//connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v2.6&appId=494568984079229";
-//        fjs.parentNode.insertBefore(js, fjs);
-//    }(document, 'script', 'facebook-jssdk'));
+app.controller('paymentController', function ($scope, $http) {
 
-    
-//});
+    //$scope.hideForm = false;
+
+    $scope.generateToken = function () {
+        var form = $('#payment-form');
+
+        // No pressing the buy now button more than once
+        //$scope.submitDis = true;
+        form.find('button').prop('disabled', true);
+
+        // Create the token, based on the form object
+        Stripe.createToken(form, stripeResponseHandler);
+
+    };
+
+    var stripeResponseHandler = function (status, response) {
+        console.log(response);
+        var form = $('#payment-form');
+
+        // Any validation errors?
+        if (response.error) {
+            // Show the user what they did wrong
+            //$scope.error = response.error.message;
+            form.find('.payment-errors').text(response.error.message);
+            // Make the submit clickable again
+            form.find('button').prop('disabled', false);
+            //$scope.submitDis = false;
+        } else {
+            // Otherwise, we're good to go! Submit the form.
+
+             //Insert the unique token into the form
+            $('<input>', {
+                'type': 'hidden',
+                'name': 'stripeToken',
+                'value': response.id
+            }).appendTo(form);
+          
+
+            console.log(response.id);
+
+            console.log(form.get(0));
+            //form.get(0).submit();
+            
+            $http({
+                method: 'POST',
+                url: 'http://localhost:3000/api/posts',
+                data: $('#payment-form').serialize(),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).
+                then(function (response) {
+                    console.log(response.data);
+                    //if (response.data == "Transaction completed") {
+                    //    $scope.msgCompleted = response.data;
+                    //    $scope.hideForm = true;
+                    //} else {
+                    //    form.find('.payment-errors').text(response.data);
+                    //    form.find('button').prop('disabled', false);
+                        
+                    //} 
+                    $scope.msgCompleted = response.data;
+                    $scope.hideForm = true;
+                });
+
+        }
+    };
+})
+

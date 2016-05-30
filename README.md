@@ -1,5 +1,4 @@
 
-
 #bookify
 
 ----------
@@ -33,11 +32,15 @@ Dit project maakt gebruik van verschillende componenten waar op gelet moet worde
 	- CVS: 123
 
  -  Vanwege een voor ons onbekend probleem, is het noodzakelijk om de `batarang` extensie in `Google Chrome` geïnstalleerd te hebben (https://chrome.google.com/webstore/detail/angularjs-batarang/ighdmehidhipcmcojjgiloacoafjmpfk). Eenmaal deze extensie geïnstalleerd is, zal de browser opnieuw opgestart moeten worden. Indien je nu naar de webapplicatie gaat, zal je de `tools voor ontwikkelaars` moeten openen en naar het tablad `AngularJS` gaan, waarna je de checkbox `enable`zal moeten aanvinken.
+ - Voor gebruik te maken van onze eigen API moet er Node gebruikt worden met de koppeling naar `Firebase`. Echter om dit te laten werken is er een `credentials.json` file nodig . Deze file is ter beschikking gesteld via mail en kan gewoon in de root van de repo geplaatst worden. 
 
 	 
 
 
 
+
+
+	  
 
 
 	  
